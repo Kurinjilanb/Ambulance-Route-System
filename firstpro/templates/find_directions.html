@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body><h1>Directions</h1>
+
+  <div id="map" style="height: 500px; width: 100%;"></div>
+  
+  {% if steps %}
+    <ul>
+      {% for step in steps %}
+        <li>{{ step.html_instructions|safe }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Enter origin and destination to find directions.</p>
+  {% endif %}
+  
+  <form method="get">
+    <label>
+      Origin:
+      <input type="text" name="origin">
+    </label>
+  
+    <label>
+      Destination:
+      <input type="text" name="destination">
+    </label>
+  
+    <button type="submit">Find Directions</button>
+  </form>
+  
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-WBgrAIgrvGK3YX7nITbUX3UsllpR5Q&callback=initMap">
+  </script>
+  
+  <script>
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: {lat: 20.5937, lng: 78.9629}  // default to India
+      });
+  
+      {% if steps %}
+        var path = [];
+  
+        {% for step in steps %}
+          path.push({lat: {{ step.start_location.lat }}, lng: {{ step.start_location.lng }}});
+          path.push({lat: {{ step.end_location.lat }}, lng: {{ step.end_location.lng }}});
+        {% endfor %}
+  
+        var polyline = new google.maps.Polyline({
+          path: path,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+  
+        polyline.setMap(map);
+      {% endif %}
+    }
+  </script>
+    
+</body>
+</html>
