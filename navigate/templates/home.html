@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Navigate to Destination</title>
+  </head>
+  <body>
+    <h1>Navigate to Destination</h1>
+    <p>Click the button below to navigate to your destination.</p>
+    <form method="post" action="{% url 'navigate_to_destination' %}">
+      {% csrf_token %}
+      <button type="submit">Navigate</button>
+    </form>
+  </body>
+</html>
